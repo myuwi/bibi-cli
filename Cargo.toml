@@ -2,7 +2,7 @@
 name = "bibi"
 description = "A simple Hololive Schedule CLI tool."
 version = "0.1.0"
-authors = ["Myuwi <myuwi@pm.me>"]
+authors = ["Miika Kurvinen <myuwi@pm.me>"]
 license = "MIT"
 edition = "2021"
 
