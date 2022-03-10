@@ -27,7 +27,7 @@ Simply running the command without any arguments will print current and upcoming
 
 ![Usage](assets/usage.png)
 
-For help, run `bibi -h`.
+For help, run `bibi --help`.
 
 ## Installation
 
