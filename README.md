@@ -65,11 +65,12 @@ sudo rm -f "$(which bibi)"
 
 ## Why the name "Bibi"?
 
-Bibi is the name of [Tokoyami Towa][towa-yt]'s "hat", which is also her "pet guardian".
+From the [Hololive fan wiki][towa-wiki]: "The hat she ([Tokoyami Towa][towa-yt]) has on is actually her pet Bibi (ビビ), a guardian and protector given to her by her mother in order to look after her during her studies."
 
 [*Go listen to Towa's music*][towa-music]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+[towa-wiki]: https://hololive.wiki/wiki/Tokoyami_Towa
 [towa-yt]: https://www.youtube.com/channel/UC1uv2Oq6kNxgATlCiez59hw
 [towa-music]: https://www.youtube.com/watch?v=0firv69LkgI&list=PLIHyIgRAWkUz3MAUPbTg9XcuP_rzDJ1bk

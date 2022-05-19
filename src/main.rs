@@ -22,6 +22,12 @@ struct Live {
     channel: Channel,
 }
 
+impl Live {
+    fn is_live(&self) -> bool {
+        self.live_start.is_some() && self.live_end.is_none()
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 struct APIResponse {
     live: Vec<Live>,
@@ -29,7 +35,7 @@ struct APIResponse {
     ended: Vec<Live>,
 }
 
-fn get_live_timestamp(live: &Live) -> String {
+fn get_live_timestamp_str(live: &Live) -> String {
     if live.live_start.is_some() {
         &live.live_start.as_ref().unwrap()
     } else {
@@ -38,14 +44,20 @@ fn get_live_timestamp(live: &Live) -> String {
     .to_string()
 }
 
-fn print_lives(data: APIResponse) {
+fn print_lives(data: APIResponse, args: Args) {
     let mut lives = data.ended;
     lives.extend(data.live);
     lives.extend(data.upcoming);
 
+    // If --live flag is enabled, filter out streams that are not currently live
+    if args.live {
+        lives.retain(|live| live.is_live());
+    }
+
+    // Sort the streams by timestamp
     lives.sort_by(|a, b| {
-        let timestamp_a = get_live_timestamp(a);
-        let timestamp_b = get_live_timestamp(b);
+        let timestamp_a = get_live_timestamp_str(a);
+        let timestamp_b = get_live_timestamp_str(b);
 
         timestamp_a.cmp(&timestamp_b)
     });
@@ -62,9 +74,9 @@ fn print_lives(data: APIResponse) {
 
         // If live_start has some value, live stream has started
         let has_started = live.live_start.is_some();
+        let has_ended = live.live_end.is_some();
 
-        // Use live_start as timestamp if it exists
-        let timestamp = get_live_timestamp(live);
+        let timestamp = get_live_timestamp_str(live);
 
         let fixed_offset = match DateTime::parse_from_rfc3339(&timestamp) {
             Ok(t) => t,
@@ -73,8 +85,9 @@ fn print_lives(data: APIResponse) {
 
         let local_time: DateTime<Local> = DateTime::from(fixed_offset);
 
-        // Don't show streams that are "late" more than 12 hours
-        if !has_started && Local::now().timestamp() - local_time.timestamp() > 43200 {
+        // Don't show streams that are more than 12 hours "late"
+        let is_late = !has_started && Local::now().timestamp() - local_time.timestamp() > 43200;
+        if is_late {
             continue;
         }
 
@@ -88,7 +101,7 @@ fn print_lives(data: APIResponse) {
             html_escape::decode_html_entities(&live.title)
         );
 
-        if live.live_end.is_some() {
+        if has_ended {
             println!("{}", formatted.bright_black());
         } else if has_started {
             println!("{}", formatted.magenta());
@@ -98,32 +111,28 @@ fn print_lives(data: APIResponse) {
     }
 }
 
-fn fetch_data() {
+fn fetch_data() -> Result<APIResponse, String> {
     let resp  = match reqwest::blocking::get("https://api.holotools.app/v1/live?max_upcoming_hours=24&lookback_hours=0&hide_channel_desc=1") {
         Ok(resp) => resp,
-        Err(err) => return eprintln!("{}",format!("Unable to connect to the API: {}", err).red())
+        Err(err) => return Err(format!("Unable to connect to the API: {}", err))
     };
 
     match resp.status() {
         reqwest::StatusCode::OK => (),
         _ => {
-            return eprintln!(
-                "{}",
-                format!(
-                    "Received an invalid response from the API: {}",
-                    resp.status()
-                )
-                .red()
-            )
+            return Err(format!(
+                "Received an invalid response from the API: {}",
+                resp.status()
+            ))
         }
     };
 
     let parsed = match resp.json::<APIResponse>() {
         Ok(parsed) => parsed,
-        Err(_) => return eprintln!("{}", "Unable to parse response JSON".red()),
+        Err(_) => return Err("Unable to parse response JSON".to_string()),
     };
 
-    print_lives(parsed);
+    Ok(parsed)
 }
 
 const BIBI_ASCII: &str = "
@@ -154,17 +163,24 @@ fn print_bibi() {
 
 #[derive(Parser)]
 #[clap(about, long_about = None, version )]
-struct Cli {
+struct Args {
     #[clap(short, long, help = "Print a cute Bibi ascii art")]
     ascii: bool,
+
+    #[clap(short, long, help = "Print only streams that are currently live")]
+    live: bool,
 }
 
 fn main() {
-    let cli = Cli::parse();
+    let args = Args::parse();
 
-    if cli.ascii {
+    if args.ascii {
         print_bibi();
     } else {
-        fetch_data();
+        let data = match fetch_data() {
+            Ok(resp) => resp,
+            Err(err) => return eprintln!("{}", err.red()),
+        };
+        print_lives(data, args);
     }
 }
