@@ -6,20 +6,24 @@
 
 ### Bibi
 
-A simple Hololive Stream Schedule CLI tool written in Rust.
+A simple Hololive Stream Schedule CLI tool.
 
 [Features](#features)
 •
 [Usage](#usage)
 •
 [Installation](#installation)
+•
+[Configuration](#configuration)
+•
+[Uninstallation](#uninstallation)
 
 </div>
 
 ## Features
 
 - View the schedules of Hololive members
-- ... and that's it.
+- Configurable
 
 ## Usage
 
@@ -30,29 +34,27 @@ Simply running `bibi` without any arguments will print the current and upcoming 
 For help, run `bibi -h`.
 
 ```
-bibi 0.2.0
 A simple Hololive Schedule CLI tool.
-Shows current and upcoming streams by default.
+Shows current and upcoming streams if no flags are provided.
 
-USAGE:
-    bibi [OPTIONS]
+Usage: bibi [OPTIONS]
 
-OPTIONS:
-    -a, --ascii       Print a cute Bibi ascii art
-    -e, --ended       Show streams that have ended
-    -h, --help        Print help information
-    -l, --live        Show streams that are currently live
-    -u, --upcoming    Show streams that have not started yet
-    -V, --version     Print version information
+Options:
+  -a, --all            Show all streams
+      --ascii          Print a cute Bibi ascii art
+  -c, --config <PATH>  Config path
+  -l, --live           Show streams that are currently live
+  -e, --ended          Show streams that have ended
+  -u, --upcoming       Show streams that have not started yet
+  -h, --help           Print help information
+  -V, --version        Print version information
 ```
 
 ## Installation
 
-There is currently no "automatic" installation method so you'll have to build from the source code.
+### Manual installation (Linux)
 
-### Manual installation
-
-1. Install dependencies: Rust, Cargo
+1. Install Rust
 2. Clone the repository
 
    ```sh
@@ -66,11 +68,29 @@ There is currently no "automatic" installation method so you'll have to build fr
    cargo build --release
    ```
 
-4. Copy the executable to the `/usr/bin` directory.
+4. Copy the `bibi` executable to the `/usr/bin` directory.
 
    ```sh
-   sudo install -s -Dm755 ./target/release/bibi -t /usr/bin
+   sudo install -Dsm755 target/release/bibi -t /usr/bin
    ```
+
+## Configuration
+
+Bibi will look for a config file at following locations: `$XDG_CONFIG_HOME/bibi/bibi.toml` or `$HOME/.config/bibi/bibi.toml`
+
+### Example configuration file
+
+```toml
+[branches]
+hololive = true # Show Hololive members?
+holostars = false # Show Holostars members?
+
+[channels]
+# Specific channels to exclude (overrides branch options)
+# Channel ids are case sensitive, handles are not
+exclude = ["@hololivetv", "UCJFZiqLMntJufDCHc6bQixg"]
+include = ["@astelleda"]
+```
 
 ## Uninstallation
 
@@ -86,7 +106,7 @@ From the [Hololive fan wiki][towa-wiki]: "The hat she ([Tokoyami Towa][towa-yt])
 
 [_Go listen to Towa's music_][towa-music]
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right"><a href="#top">back to top</a></p>
 
 [towa-wiki]: https://hololive.wiki/wiki/Tokoyami_Towa
 [towa-yt]: https://www.youtube.com/channel/UC1uv2Oq6kNxgATlCiez59hw

@@ -5,7 +5,9 @@ use futures::stream::*;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 
+use crate::channels::{Branch, Channel, CHANNELS};
 use crate::cli::Args;
+use crate::config::Config;
 
 #[derive(Clone, Debug)]
 pub enum LiveStreamStatus {
@@ -32,7 +34,7 @@ pub struct LiveStream {
     pub id: String,
     pub title: String,
     pub author_name: String,
-    pub author_url: String,
+    pub author_id: String,
     pub status: LiveStreamStatus,
     pub time: DateTime<FixedOffset>,
 }
@@ -62,41 +64,39 @@ async fn fetch_html() -> Result<String, String> {
 }
 
 async fn fetch_oembed_data(holodule_data: Vec<HoloduleData>) -> Result<Vec<LiveStream>, String> {
-    let holodule_data_clone = holodule_data.clone();
-
-    let fetches = futures::stream::iter(holodule_data_clone)
-        .map(|live_stream| async move {
-            let resp = match reqwest::get(format!(
+    let fetches = futures::stream::iter(&holodule_data)
+        .map(|live_stream| async {
+            let data = reqwest::get(format!(
                 "https://www.youtube.com/oembed?url=https://youtu.be/{}&format=json",
                 live_stream.id
             ))
-            .await
-            {
-                Ok(resp) => match resp.json::<OEmbedData>().await {
-                    Ok(resp) => resp,
-                    Err(_) => OEmbedData::default(),
-                },
-                Err(_) => OEmbedData::default(),
-            };
-            resp
+            .await?
+            .json::<OEmbedData>()
+            .await?;
+
+            Ok(data)
         })
         .buffered(16)
-        .collect::<Vec<OEmbedData>>()
+        .collect::<Vec<Result<OEmbedData, Box<dyn std::error::Error>>>>()
         .await;
 
     let streams = holodule_data
         .iter()
         .zip(fetches.iter())
         .filter_map(|(holodule, oembed)| {
-            if oembed.author_url == "" {
+            if oembed.is_err() {
                 return None;
             }
+
+            let oembed = oembed.as_ref().unwrap();
+
+            let (_, author_id) = oembed.author_url.rsplit_once('/').unwrap();
 
             Some(LiveStream {
                 id: holodule.id.to_owned(),
                 title: oembed.title.to_owned(),
                 author_name: oembed.author_name.to_owned(),
-                author_url: oembed.author_url.to_owned(),
+                author_id: author_id.to_owned(),
                 status: holodule.status.to_owned(),
                 time: holodule.time.to_owned(),
             })
@@ -115,13 +115,13 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
         .unwrap()
         .text()
         .collect::<String>()
-        .split("(")
+        .split('(')
         .next()
         .unwrap()
         .chars()
         .filter(|c| !c.is_whitespace())
         .collect::<String>()
-        .split("/")
+        .split('/')
         .map(|element| element.parse::<u32>().unwrap())
         .collect();
 
@@ -136,9 +136,9 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
         }
     }
 
-    let mut last_naive_time: Option<NaiveTime> = None;
+    let mut naive_time_prev: Option<NaiveTime> = None;
 
-    let live_streams: Vec<HoloduleData> = document
+    let live_streams = document
         .select(&Selector::parse("a.thumbnail").unwrap())
         .filter_map(|element| {
             let url = element.value().attr("href")?;
@@ -147,7 +147,7 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
                 return None;
             }
 
-            let video_id = url.split("?v=").last().unwrap();
+            let (_, video_id) = url.rsplit_once("?v=").unwrap();
 
             let live = element.value().attr("style")?.contains("border: 3px red");
 
@@ -163,11 +163,11 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
 
             let naive_time = NaiveTime::parse_from_str(&*time_str, "%H:%M").unwrap();
 
-            if last_naive_time.is_some() && last_naive_time.unwrap() > naive_time {
+            if naive_time_prev.is_some() && naive_time_prev.unwrap() > naive_time {
                 naive_date = naive_date.succ()
             }
 
-            last_naive_time = Some(naive_time);
+            naive_time_prev = Some(naive_time);
 
             let jst_offset = 9 * 3600;
             let streamtime = FixedOffset::east(jst_offset)
@@ -197,37 +197,66 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
     Ok(live_streams)
 }
 
-pub async fn get_schedule(args: &Args) -> Result<Vec<LiveStream>, String> {
-    let body = match fetch_html().await {
-        Ok(resp) => resp,
-        Err(err) => return Err(err),
-    };
+fn vector_contains_channel(channel_list: &[String], author: &Channel) -> bool {
+    channel_list.iter().any(|s| {
+        if s == author.id {
+            return true;
+        }
 
-    let mut lives = parse_html(&body).unwrap();
+        if let Some(handle) = author.handle {
+            if s.to_lowercase() == handle.to_lowercase() {
+                return true;
+            }
+        }
 
-    // If no args are selected, don't show "Ended"
-    if !args.live && !args.ended && !args.upcoming {
-        lives.retain(|live| !matches!(live.status, LiveStreamStatus::Ended));
-    } else {
-        lives = lives
-            .into_iter()
-            .filter(|stream| {
-                if args.live && matches!(stream.status, LiveStreamStatus::Live) {
-                    return true;
-                } else if args.ended && matches!(stream.status, LiveStreamStatus::Ended) {
-                    return true;
-                } else if args.upcoming && matches!(stream.status, LiveStreamStatus::Upcoming) {
-                    return true;
-                }
-                false
-            })
-            .collect::<Vec<_>>();
+        false
+    })
+}
+
+pub async fn get_schedule(args: &Args, cfg: &Config) -> Result<Vec<LiveStream>, String> {
+    let body = fetch_html().await?;
+
+    let mut lives = parse_html(&body)?;
+
+    if !args.all {
+        if !args.live && !args.ended && !args.upcoming {
+            // If no args are selected, don't show "Ended"
+            lives.retain(|live| !matches!(live.status, LiveStreamStatus::Ended));
+        } else {
+            lives.retain(|stream| match stream.status {
+                LiveStreamStatus::Live => args.live,
+                LiveStreamStatus::Ended => args.ended,
+                LiveStreamStatus::Upcoming => args.upcoming,
+            });
+        }
     }
 
-    let live_streams = match fetch_oembed_data(lives).await {
-        Ok(parsed) => parsed,
-        Err(err) => return Err(err),
-    };
+    let mut live_streams = fetch_oembed_data(lives).await?;
+
+    if !cfg.branches.hololive || !cfg.branches.holostars || !cfg.channels.exclude.is_empty() {
+        live_streams.retain(|stream| {
+            match CHANNELS
+                .iter()
+                .find(|&c| c.handle.as_ref().unwrap_or(&c.id) == &stream.author_id)
+            {
+                Some(author) => {
+                    if vector_contains_channel(&cfg.channels.include, author) {
+                        return true;
+                    }
+
+                    if vector_contains_channel(&cfg.channels.exclude, author) {
+                        return false;
+                    }
+
+                    match author.branch {
+                        Branch::Hololive => cfg.branches.hololive,
+                        Branch::Holostars => cfg.branches.holostars,
+                    }
+                }
+                None => true,
+            }
+        });
+    }
 
     Ok(live_streams)
 }

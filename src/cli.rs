@@ -1,21 +1,44 @@
+use std::path::PathBuf;
+
 use clap::Parser;
 
 const ABOUT: &str = "A simple Hololive Schedule CLI tool.
-Shows current and upcoming streams by default.";
+Shows current and upcoming streams if no flags are provided.";
 
 #[derive(Debug, Parser)]
-#[clap(about = ABOUT, version )]
+#[command(about = ABOUT, version )]
 pub struct Args {
-    #[clap(short, long, help = "Print a cute Bibi ascii art")]
+    #[arg(short, long, help = "Show all streams")]
+    pub all: bool,
+
+    #[arg(long, help = "Print a cute Bibi ascii art")]
     pub ascii: bool,
 
-    #[clap(short, long, help = "Show streams that have ended")]
-    pub ended: bool,
+    #[arg(short, long, help = "Config path", value_name = "PATH")]
+    pub config: Option<PathBuf>,
 
-    #[clap(short, long, help = "Show streams that are currently live")]
+    #[clap(
+        short,
+        long,
+        help = "Show streams that are currently live",
+        conflicts_with = "all"
+    )]
     pub live: bool,
 
-    #[clap(short, long, help = "Show streams that have not started yet")]
+    #[arg(
+        short,
+        long,
+        help = "Show streams that have ended",
+        conflicts_with = "all"
+    )]
+    pub ended: bool,
+
+    #[arg(
+        short,
+        long,
+        help = "Show streams that have not started yet",
+        conflicts_with = "all"
+    )]
     pub upcoming: bool,
 }
 

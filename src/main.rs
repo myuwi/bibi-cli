@@ -1,27 +1,38 @@
-mod schedule_parser;
-use schedule_parser::{LiveStream, LiveStreamStatus};
+mod channels;
 
 mod cli;
 use cli::Args;
 
+mod config;
+use config::Config;
+
+mod schedule_parser;
+use schedule_parser::{LiveStream, LiveStreamStatus};
+
+use ansi_term::Color::*;
+use ansi_term::Style;
+use atty::Stream;
 use chrono::prelude::*;
-use owo_colors::{AnsiColors, OwoColorize};
-use std::cmp;
 use unicode_width::UnicodeWidthStr;
 
-fn print_lives(lives: &Vec<LiveStream>, _args: &Args) {
+use crate::config::ConfigError;
+
+fn print_lives(lives: &[LiveStream]) {
     // Get the width of the widest channel name
-    let max_name_width = lives.iter().fold(0, |acc, live| {
-        cmp::max(UnicodeWidthStr::width(&*live.author_name), acc)
-    });
+    let max_name_width = lives
+        .iter()
+        .fold(0, |acc, live| std::cmp::max(live.author_name.width(), acc));
+
+    let use_color = atty::is(Stream::Stdout);
 
     for live in lives.iter() {
-        let name_width = UnicodeWidthStr::width(&*live.author_name);
+        let name_width = live.author_name.width();
 
         let white_space = " ".repeat(max_name_width - name_width);
 
         let local_time: DateTime<Local> = DateTime::from(live.time);
 
+        // Default format: '{time}  {author_name}  {stream_url}  {stream_title}'
         let formatted = format!(
             "{}  {}{}  https://youtu.be/{}  {}",
             local_time.format("%H:%M"),
@@ -31,11 +42,17 @@ fn print_lives(lives: &Vec<LiveStream>, _args: &Args) {
             live.title
         );
 
-        match live.status {
-            LiveStreamStatus::Ended => println!("{}", formatted.bright_black()),
-            LiveStreamStatus::Live => println!("{}", formatted.magenta()),
-            LiveStreamStatus::Upcoming => println!("{}", formatted.white()),
-        }
+        let style = if use_color {
+            match live.status {
+                LiveStreamStatus::Ended => Fixed(8).normal(),
+                LiveStreamStatus::Live => Purple.normal(),
+                LiveStreamStatus::Upcoming => Style::default(),
+            }
+        } else {
+            Style::default()
+        };
+
+        println!("{}", style.paint(formatted));
     }
 }
 
@@ -49,33 +66,33 @@ const BIBI_ASCII: &str = "
 ";
 
 fn print_bibi() {
-    let colors = [
-        AnsiColors::Magenta,
-        AnsiColors::Yellow,
-        AnsiColors::Magenta,
-        AnsiColors::Yellow,
-    ];
+    let colors = [Purple.bold(), Yellow.bold(), Purple.bold(), Yellow.bold()];
     // Split Bibi ascii into lines while keeping line breaks
     for line in BIBI_ASCII.split_inclusive('\n') {
         // Split the lines on "|" and color the splits
         for (text, color) in line.split('|').zip(colors.iter().copied()) {
-            print!("{}", text.color(color).bold());
+            print!("{}", color.paint(text));
         }
     }
     println!();
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), String> {
     let args = Args::new();
+    let cfg = Config::new(&args.config).map_err(|err| match err {
+        ConfigError::NotFound(e) => format!(
+            "Configuration file not found at '{}'",
+            e.into_os_string().into_string().unwrap()
+        ),
+    })?;
 
     if args.ascii {
         print_bibi();
     } else {
-        let lives = match schedule_parser::get_schedule(&args).await {
-            Ok(resp) => resp,
-            Err(err) => return eprintln!("{}", err.red()),
-        };
-        print_lives(&lives, &args);
+        let lives = schedule_parser::get_schedule(&args, &cfg).await?;
+        print_lives(&lives);
     }
+
+    Ok(())
 }
