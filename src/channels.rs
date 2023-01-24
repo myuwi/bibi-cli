@@ -13,7 +13,7 @@ pub enum Branch {
 pub const CHANNELS: &[Channel] = &[
     Channel {
         id: "UCJFZiqLMntJufDCHc6bQixg",
-        handle: Some("@hololivetv"),
+        handle: Some("@hololive"),
         name: "hololive ホロライブ - VTuber Group",
         branch: Branch::Hololive,
     },
@@ -37,7 +37,7 @@ pub const CHANNELS: &[Channel] = &[
     },
     Channel {
         id: "UCJxZpzx4wHzEYD-eCiZPikg",
-        handle: Some("@AxelSyrios"),
+        handle: Some("@HOLOSTARSenglish"),
         name: "HOLOSTARS English",
         branch: Branch::Holostars,
     },
@@ -109,7 +109,7 @@ pub const CHANNELS: &[Channel] = &[
     },
     Channel {
         id: "UCLbtM3JZfRTg8v2KGag-RMw",
-        handle: None,
+        handle: Some("@user-yp5xk6qh4q"),
         name: "AkiRose Ch.アキ・ローゼンタールSub",
         branch: Branch::Hololive,
     },
@@ -217,7 +217,7 @@ pub const CHANNELS: &[Channel] = &[
     },
     Channel {
         id: "UCZlDXzGoo7d44bwdNObFacg",
-        handle: Some("@amanekanatach"),
+        handle: Some("@AmaneKanata"),
         name: "Kanata Ch. 天音かなた",
         branch: Branch::Hololive,
     },
@@ -271,7 +271,7 @@ pub const CHANNELS: &[Channel] = &[
     },
     Channel {
         id: "UCIBY1ollUsauvVi4hW4cumw",
-        handle: Some("@chloech.-holox-8649"),
+        handle: Some("@SakamataChloe"),
         name: "Chloe ch. 沙花叉クロヱ - holoX -",
         branch: Branch::Hololive,
     },
@@ -531,6 +531,30 @@ pub const CHANNELS: &[Channel] = &[
         id: "UCyxtGMdWlURZ30WSnEjDOQw",
         handle: Some("@RegisAltare"),
         name: "Regis Altare Ch. HOLOSTARS-EN",
+        branch: Branch::Holostars,
+    },
+    Channel {
+        id: "UC060r4zABV18vcahAWR1n7w",
+        handle: Some("@MachinaXFlayon"),
+        name: "Machina X Flayon Ch. HOLOSTARS-EN",
+        branch: Branch::Holostars,
+    },
+    Channel {
+        id: "UC7gxU6NXjKF1LrgOddPzgTw",
+        handle: Some("@BanzoinHakka"),
+        name: "Banzoin Hakka Ch. HOLOSTARS-EN",
+        branch: Branch::Holostars,
+    },
+    Channel {
+        id: "UCHP4f7G2dWD4qib7BMatGAw",
+        handle: Some("@GavisBettel"),
+        name: "Gavis Bettel Ch. HOLOSTARS-EN",
+        branch: Branch::Holostars,
+    },
+    Channel {
+        id: "UCMqGG8BRAiI1lJfKOpETM_w",
+        handle: Some("@JosuijiShinri"),
+        name: "Josuiji Shinri Ch. HOLOSTARS-EN",
         branch: Branch::Holostars,
     },
 ];
