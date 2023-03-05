@@ -68,10 +68,10 @@ Options:
    cargo build --release
    ```
 
-4. Copy the `bibi` executable to the `/usr/bin` directory.
+4. Copy the `bibi` executable to the `/usr/local/bin` directory.
 
    ```sh
-   sudo install -Dsm755 target/release/bibi -t /usr/bin
+   sudo install -Dsm755 target/release/bibi -t /usr/local/bin
    ```
 
 ## Configuration
