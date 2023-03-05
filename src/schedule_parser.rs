@@ -176,23 +176,28 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
                 .filter(|c| !c.is_whitespace())
                 .collect::<String>();
 
-            let naive_time = NaiveTime::parse_from_str(&*time_str, "%H:%M").unwrap();
+            // Create naive time from start time string
+            let naive_time = NaiveTime::parse_from_str(&time_str, "%H:%M").unwrap();
 
+            // TODO: Make sure there aren't edge cases where this doesn't work
+            // If time is less than the last time assume it is the next day so update the date
             if naive_time_prev.is_some() && naive_time_prev.unwrap() > naive_time {
                 naive_date = naive_date.succ()
             }
 
             naive_time_prev = Some(naive_time);
 
+            // Create a DateTime for the stream
             let jst_offset = 9 * 3600;
-            let streamtime = FixedOffset::east(jst_offset)
+            let stream_time = FixedOffset::east_opt(jst_offset)
+                .unwrap()
                 .ymd(naive_date.year(), naive_date.month(), naive_date.day())
                 .and_hms(naive_time.hour(), naive_time.minute(), 0);
 
             let status = if live {
                 LiveStreamStatus::Live
-            } else if streamtime.timestamp() + 15 * 60 < jst_now.timestamp()
-                || streamtime.minute() % 5 != 0
+            } else if stream_time.timestamp() + 15 * 60 < jst_now.timestamp()
+                || stream_time.minute() % 5 != 0
             {
                 LiveStreamStatus::Ended
             } else {
@@ -201,7 +206,7 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
 
             let live_stream = HoloduleData {
                 id: video_id.to_owned(),
-                time: streamtime,
+                time: stream_time,
                 status,
             };
 
