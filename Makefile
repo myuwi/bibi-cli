@@ -1,8 +1,10 @@
+TARGET_DIR := /usr/local/bin
+
 build:
 	cargo build --release
 
-install:
-	install -Dsm755 target/release/bibi -t /usr/bin
+install: build
+	sudo install -Dsm755 target/release/bibi -t $(TARGET_DIR)
 
 uninstall:
-	rm "/usr/bin/bibi"
+	sudo rm "$(TARGET_DIR)/bibi"
