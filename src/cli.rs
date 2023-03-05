@@ -17,6 +17,9 @@ pub struct Args {
     #[arg(short, long, help = "Config path", value_name = "PATH")]
     pub config: Option<PathBuf>,
 
+    #[arg(short, long, help = "Output format", value_name = "FORMAT")]
+    pub format: Option<String>,
+
     #[arg(
         short,
         long,
