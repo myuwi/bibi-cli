@@ -4,6 +4,8 @@ use std::fs;
 use std::io::ErrorKind::NotFound;
 use std::path::PathBuf;
 
+use thiserror::Error;
+
 const fn default_true() -> bool {
     true
 }
@@ -44,7 +46,9 @@ pub struct Config {
     pub channels: ConfigChannels,
 }
 
+#[derive(Error, Debug)]
 pub enum ConfigError {
+    #[error("Configuration file not found at {0:?}")]
     NotFound(PathBuf),
 }
 
@@ -65,6 +69,7 @@ impl Config {
         };
 
         let config = match fs::read_to_string(config_path) {
+            // TODO: Handle invalid file error
             Ok(cfg) => toml::from_str(&cfg).unwrap(),
             Err(e) if e.kind() == NotFound && path.is_none() => Config::default(),
             Err(e) => panic!("{}", e),

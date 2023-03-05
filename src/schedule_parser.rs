@@ -4,6 +4,7 @@ use chrono_tz::Tz;
 use futures::stream::*;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 use crate::channels::{Branch, Channel, CHANNELS};
 use crate::cli::Args;
@@ -39,31 +40,44 @@ pub struct LiveStream {
     pub time: DateTime<FixedOffset>,
 }
 
-async fn fetch_html() -> Result<String, String> {
-    let resp = match reqwest::get("https://schedule.hololive.tv/").await {
+#[derive(Error, Debug)]
+pub enum ScheduleParserError {
+    #[error("Unable to connect to {0}")]
+    ConnectionError(String),
+    #[error("Received an invalid response: {0}")]
+    InvalidRespose(u16),
+    #[error("Unable to parse response text")]
+    ParseError,
+}
+
+const SCHEDULE_URL: &str = "https://schedule.hololive.tv/";
+
+async fn fetch_html() -> Result<String, ScheduleParserError> {
+    let resp = match reqwest::get(SCHEDULE_URL).await {
         Ok(resp) => resp,
-        Err(err) => {
-            return Err(format!(
-                "Unable to connect to https://schedule.hololive.tv: {}",
-                err
+        Err(_) => {
+            return Err(ScheduleParserError::ConnectionError(
+                SCHEDULE_URL.to_owned(),
             ))
         }
     };
 
     match resp.status() {
         reqwest::StatusCode::OK => (),
-        _ => return Err(format!("Received an invalid response: {}", resp.status())),
+        _ => return Err(ScheduleParserError::InvalidRespose(resp.status().as_u16())),
     };
 
     let body = match resp.text().await {
         Ok(resp) => resp,
-        Err(_) => return Err("Unable to parse response text".to_owned()),
+        Err(_) => return Err(ScheduleParserError::ParseError),
     };
 
     Ok(body)
 }
 
-async fn fetch_oembed_data(holodule_data: Vec<HoloduleData>) -> Result<Vec<LiveStream>, String> {
+async fn fetch_oembed_data(
+    holodule_data: Vec<HoloduleData>,
+) -> Result<Vec<LiveStream>, ScheduleParserError> {
     let fetches = futures::stream::iter(&holodule_data)
         .map(|live_stream| async {
             let data = reqwest::get(format!(
@@ -106,7 +120,7 @@ async fn fetch_oembed_data(holodule_data: Vec<HoloduleData>) -> Result<Vec<LiveS
     Ok(streams)
 }
 
-fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
+fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
     let document = Html::parse_document(html);
 
     let first_date: Vec<u32> = document
@@ -147,10 +161,11 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, String> {
                 return None;
             }
 
-            let (_, video_id) = url.rsplit_once("?v=").unwrap();
+            let (_, video_id) = url.rsplit_once("?v=")?;
 
             let live = element.value().attr("style")?.contains("border: 3px red");
 
+            // Get stream start time string
             let selector = Selector::parse("div.datetime").unwrap();
             let time_str = element
                 .select(&selector)
@@ -213,7 +228,10 @@ fn vector_contains_channel(channel_list: &[String], author: &Channel) -> bool {
     })
 }
 
-pub async fn get_schedule(args: &Args, cfg: &Config) -> Result<Vec<LiveStream>, String> {
+pub async fn get_schedule(
+    args: &Args,
+    cfg: &Config,
+) -> Result<Vec<LiveStream>, ScheduleParserError> {
     let body = fetch_html().await?;
 
     let mut lives = parse_html(&body)?;

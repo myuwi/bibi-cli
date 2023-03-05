@@ -17,7 +17,7 @@ pub struct Args {
     #[arg(short, long, help = "Config path", value_name = "PATH")]
     pub config: Option<PathBuf>,
 
-    #[clap(
+    #[arg(
         short,
         long,
         help = "Show streams that are currently live",

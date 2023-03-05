@@ -4,18 +4,17 @@ mod cli;
 use cli::Args;
 
 mod config;
-use config::Config;
+use config::*;
 
 mod schedule_parser;
 use schedule_parser::{LiveStream, LiveStreamStatus};
 
 use ansi_term::Color::*;
 use ansi_term::Style;
+use anyhow::Result;
 use atty::Stream;
 use chrono::prelude::*;
 use unicode_width::UnicodeWidthStr;
-
-use crate::config::ConfigError;
 
 fn print_lives(lives: &[LiveStream]) {
     // Get the width of the widest channel name
@@ -78,14 +77,9 @@ fn print_bibi() {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), String> {
+async fn main() -> Result<()> {
     let args = Args::new();
-    let cfg = Config::new(&args.config).map_err(|err| match err {
-        ConfigError::NotFound(e) => format!(
-            "Configuration file not found at '{}'",
-            e.into_os_string().into_string().unwrap()
-        ),
-    })?;
+    let cfg = Config::new(&args.config)?;
 
     if args.ascii {
         print_bibi();
