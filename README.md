@@ -40,26 +40,26 @@ Shows current and upcoming streams if no flags are provided.
 Usage: bibi [OPTIONS]
 
 Options:
-  -a, --all            Show all streams
-      --ascii          Print a cute Bibi ascii art
-  -c, --config <PATH>  Config path
-  -l, --live           Show streams that are currently live
-  -e, --ended          Show streams that have ended
-  -u, --upcoming       Show streams that have not started yet
-  -h, --help           Print help information
-  -V, --version        Print version information
+  -a, --all              Show all streams
+      --ascii            Print a cute Bibi ascii art
+  -c, --config <PATH>    Config path
+  -f, --format <FORMAT>  Output format
+  -l, --live             Show streams that are currently live
+  -e, --ended            Show streams that have ended
+  -u, --upcoming         Show streams that have not started yet
+  -h, --help             Print help information
+  -V, --version          Print version information
 ```
 
 ## Installation
 
-### Manual installation (Linux)
+### Manual installation
 
 1. Install Rust
 2. Clone the repository
 
    ```sh
-   git clone https://github.com/myuwi/bibi-cli.git
-   cd bibi-cli
+   git clone https://github.com/myuwi/bibi-cli.git && cd bibi-cli
    ```
 
 3. Build
@@ -73,6 +73,15 @@ Options:
    ```sh
    sudo install -Dsm755 target/release/bibi -t /usr/local/bin
    ```
+
+### Using Makefile
+
+| make      |                                                              |
+| --------- | ------------------------------------------------------------ |
+| build     | build binary in release mode                                 |
+| clean     | clean build files                                            |
+| install   | build binary in release mode and install to `/usr/local/bin` |
+| uninstall | uninstall bibi binary                                        |
 
 ## Configuration
 
