@@ -1,10 +1,8 @@
-mod channels;
-
 mod cli;
 use cli::Args;
 
 mod config;
-use config::*;
+use config::Config;
 
 mod formatter;
 use formatter::Formatter;

@@ -1,44 +1,13 @@
 use chrono::prelude::*;
-use chrono_tz::Asia::Tokyo;
-use chrono_tz::Tz;
+use chrono_tz::{Asia::Tokyo, Tz};
 use futures::stream::*;
 use scraper::{Html, Selector};
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::channels::{Branch, Channel, CHANNELS};
 use crate::cli::Args;
 use crate::config::Config;
-
-#[derive(Clone, Debug)]
-pub enum LiveStreamStatus {
-    Ended,
-    Live,
-    Upcoming,
-}
-
-#[derive(Clone, Debug)]
-pub struct HoloduleData {
-    id: String,
-    time: DateTime<FixedOffset>,
-    status: LiveStreamStatus,
-}
-
-#[derive(Serialize, Deserialize, Default, Debug)]
-pub struct OEmbedData {
-    title: String,
-    author_name: String,
-    author_url: String,
-}
-
-pub struct LiveStream {
-    pub id: String,
-    pub title: String,
-    pub author_name: String,
-    pub author_id: String,
-    pub status: LiveStreamStatus,
-    pub time: DateTime<FixedOffset>,
-}
+use bibi_types::Branch::{self, Hololive, Holostars};
+use bibi_types::{Channel, HoloduleData, LiveStream, LiveStreamStatus, OEmbedData};
 
 #[derive(Error, Debug)]
 pub enum ScheduleParserError {
@@ -49,6 +18,8 @@ pub enum ScheduleParserError {
     #[error("Unable to parse response text")]
     ParseError,
 }
+
+const CHANNELS: &[Channel] = &include!(concat!(env!("OUT_DIR"), "/channels.rs"));
 
 const SCHEDULE_URL: &str = "https://schedule.hololive.tv/";
 

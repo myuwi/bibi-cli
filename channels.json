@@ -1,0 +1,548 @@
+[
+  {
+    "id": "UCJFZiqLMntJufDCHc6bQixg",
+    "handle": "@hololive",
+    "name": "hololive ホロライブ - VTuber Group",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCWsfcksUUpoEvhia0_ut0bA",
+    "handle": "@HOLOSTARS",
+    "name": "holostars ホロスターズ - VTuber Group",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCfrWoRGlawPQDQxxeIDRP0Q",
+    "handle": "@hololiveIndonesia",
+    "name": "hololive Indonesia",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCotXwY6s8pWmuWd_snKYjhg",
+    "handle": "@hololiveEnglish",
+    "name": "hololive English",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCJxZpzx4wHzEYD-eCiZPikg",
+    "handle": "@HOLOSTARSenglish",
+    "name": "HOLOSTARS English",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCp6993wxpyDPHUpavwDFqgg",
+    "handle": "@TokinoSora",
+    "name": "SoraCh. ときのそらチャンネル",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCDqI2jOz0weumE8s7paEk6g",
+    "handle": "@Robocosan",
+    "name": "Roboco Ch. - ロボ子",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC5CwaMl1eIgY8h02uZw7u8A",
+    "handle": "@HoshimachiSuisei",
+    "name": "Suisei Channel",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC-hM6YJuNYVAmUWxeIr9FeA",
+    "handle": "@SakuraMiko",
+    "name": "Miko Ch. さくらみこ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC0TXe_LYZ4scaW2XMyi5_kw",
+    "handle": "@AZKi",
+    "name": "AZKi Channel",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC1CfXB_kRs3C-zaeTG3oGyg",
+    "handle": "@AkaiHaato",
+    "name": "HAACHAMA Ch 赤井はあと",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCD8HOxPs4Xvsm8H0ZxXGiBw",
+    "handle": "@YozoraMel",
+    "name": "Mel Channel 夜空メルチャンネル",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCdn5BQ06XqgXoAxIhbqw5Rg",
+    "handle": "@ShirakamiFubuki",
+    "name": "フブキCh。白上フブキ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCFTLzh12_nrtzqBPsTCqenA",
+    "handle": "@AkiRosenthal",
+    "name": "アキロゼCh。Vtuber/ホロライブ所属",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCQ0UDLQCjY0rmuxCDE38FGg",
+    "handle": "@NatsuiroMatsuri",
+    "name": "Matsuri Channel 夏色まつり",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCHj_mh57PVMXhAUDphUQDFA",
+    "handle": "@AkaiHaato_Sub",
+    "name": "HAACHAMA DARKWEB CH",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCLbtM3JZfRTg8v2KGag-RMw",
+    "handle": "@user-yp5xk6qh4q",
+    "name": "AkiRose Ch.アキ・ローゼンタールSub",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC1opHUrw8rvnsadT-iGp7Cg",
+    "handle": "@MinatoAqua",
+    "name": "Aqua Ch. 湊あくあ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC1suqwovbL1kzsoaZgFZLKg",
+    "handle": "@YuzukiChoco",
+    "name": "Choco Ch. 癒月ちょこ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC7fk0CB07ly8oSl0aqKkqFg",
+    "handle": "@NakiriAyame",
+    "name": "Nakiri Ayame Ch. 百鬼あやめ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCvzGlP9oQwU--Y0r9id_jnA",
+    "handle": "@OozoraSubaru",
+    "name": "Subaru Ch. 大空スバル",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCXTpFs_3PqI41qX2d9tL2Rw",
+    "handle": "@MurasakiShion",
+    "name": "Shion Ch. 紫咲シオン",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCp3tgHXw_HI0QMk1K8qh3gQ",
+    "handle": "@YuzukiChoco_Sub",
+    "name": "Choco subCh. 癒月ちょこ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UChAnqc_AY5_I3Px5dig3X1Q",
+    "handle": "@InugamiKorone",
+    "name": "Korone Ch. 戌神ころね",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCp-5t9SrOQwXMU7iIjQfARg",
+    "handle": "@OokamiMio",
+    "name": "Mio Channel 大神ミオ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCvaTdHTWBGv3MKj3KVqJVCw",
+    "handle": "@NekomataOkayu",
+    "name": "Okayu Ch. 猫又おかゆ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC1DCedRgGHBdm81E1llLhOQ",
+    "handle": "@usadapekora",
+    "name": "Pekora Ch. 兎田ぺこら",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCCzUftO8KOVkV4wQG1vkUvg",
+    "handle": "@HoushouMarine",
+    "name": "Marine Ch. 宝鐘マリン",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCdyqAaZDKHXg4Ahi7VENThQ",
+    "handle": "@ShiroganeNoel",
+    "name": "Noel Ch. 白銀ノエル",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCvInZx9h3jC2JzsIzoOebWg",
+    "handle": "@ShiranuiFlare",
+    "name": "Flare Ch. 不知火フレア",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCl_gCybOJRIgOXw6Qb4qJzQ",
+    "handle": "@UruhaRushia",
+    "name": "Rushia Ch. 潤羽るしあ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC1uv2Oq6kNxgATlCiez59hw",
+    "handle": "@TokoyamiTowa",
+    "name": "Towa Ch. 常闇トワ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCa9Y57gfeY0Zro_noHRVrnw",
+    "handle": "@HimemoriLuna",
+    "name": "Luna Ch. 姫森ルーナ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCqm3BQLlJfvkTsX_hvm0UmA",
+    "handle": "@TsunomakiWatame",
+    "name": "Watame Ch. 角巻わため",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCZlDXzGoo7d44bwdNObFacg",
+    "handle": "@AmaneKanata",
+    "name": "Kanata Ch. 天音かなた",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCS9uQI-jC3DE0L4IpXyvr6w",
+    "handle": "@KiryuCoco",
+    "name": "Coco Ch. 桐生ココ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCAWSyEs_Io8MtpY3m-zqILA",
+    "handle": "@MomosuzuNene",
+    "name": "Nene Ch.桃鈴ねね",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCFKOVgVbGmX65RxO3EtH3iw",
+    "handle": "@YukihanaLamy",
+    "name": "Lamy Ch. 雪花ラミィ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCK9V2B22uJYu3N7eR_BT9QA",
+    "handle": "@OmaruPolka",
+    "name": "Polka Ch. 尾丸ポルカ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCUKD-uaobj9jiqB-VXt71mA",
+    "handle": "@ShishiroBotan",
+    "name": "Botan Ch.獅白ぼたん",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCgZuwn-O7Szh9cAgHqJ6vjw",
+    "handle": "@ManoAloe",
+    "name": "Aloe Ch.魔乃アロエ",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC6eWCld0KwmyHFbAqK3V-Rw",
+    "handle": "@HakuiKoyori",
+    "name": "Koyori ch. 博衣こより - holoX -",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCENwRMx5Yh42zWpzURebzTw",
+    "handle": "@LaplusDarknesss",
+    "name": "Laplus ch. ラプラス・ダークネス - holoX -",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCIBY1ollUsauvVi4hW4cumw",
+    "handle": "@SakamataChloe",
+    "name": "Chloe ch. 沙花叉クロヱ - holoX -",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCs9_O1tRPMQTHQ-N_L6FU2g",
+    "handle": "@TakaneLui",
+    "name": "Lui ch. 鷹嶺ルイ - holoX -",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC_vMYWcDjmfdpH6r4TTn1MQ",
+    "handle": "@kazamairoha",
+    "name": "Iroha ch. 風真いろは - holoX -",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCHsx4Hqa-1ORjQTh9TYDhww",
+    "handle": "@TakanashiKiara",
+    "name": "Takanashi Kiara Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCL_qhgtOy0dy1Agp8vkySQg",
+    "handle": "@MoriCalliope",
+    "name": "Mori Calliope Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCMwGHR0BTZuLsmjY_NT5Pwg",
+    "handle": "@NinomaeInanis",
+    "name": "Ninomae Ina'nis Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCoSrY_IQQVpmIRZ9Xf-y93g",
+    "handle": "@GawrGura",
+    "name": "Gawr Gura Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCyl1z3jo3XHR1riLFKG5UAg",
+    "handle": "@WatsonAmelia",
+    "name": "Watson Amelia Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCq4ky2drohLT7W0DmDEw1dQ",
+    "handle": "@TakanashiKiara_de",
+    "name": "Takanashi Kiara SubCh.",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC8rcEBzJSleTkf_-agPM20g",
+    "handle": "@IRyS",
+    "name": "IRyS Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC3n5uGu18FoCy23ggWWp8tA",
+    "handle": "@NanashiMumei",
+    "name": "Nanashi Mumei Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCgmPnx-EEeOrZSg5Tiw7ZRQ",
+    "handle": "@HakosBaelz",
+    "name": "Hakos Baelz Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCmbs8T6MWqUHP1tIQvSgKrg",
+    "handle": "@OuroKronii",
+    "name": "Ouro Kronii Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCO_aKKYxn4tvrqPjcTzZ6EQ",
+    "handle": "@CeresFauna",
+    "name": "Ceres Fauna Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCsUj0dszADCGbF3gNrQEuSQ",
+    "handle": "@TsukumoSana",
+    "name": "Tsukumo Sana Ch. hololive-EN",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCAoy6rzhSf4ydcYjJw3WoVg",
+    "handle": "@AiraniIofifteen",
+    "name": "Airani Iofifteen Channel hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCOyYb1c43VlX9rc_lT6NKQw",
+    "handle": "@AyundaRisu",
+    "name": "Ayunda Risu Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCP0BspO_AMEe3aQqqpo89Dg",
+    "handle": "@MoonaHoshinova",
+    "name": "Moona Hoshinova hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC727SQYUvx5pDDGQpTICNWg",
+    "handle": "@AnyaMelfissa",
+    "name": "Anya Melfissa Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UChgTyjG-pdNvxxhdsXfHQ5Q",
+    "handle": "@PavoliaReine",
+    "name": "Pavolia Reine Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCYz_5n-uDuChHtLo7My1HnQ",
+    "handle": "@KureijiOllie",
+    "name": "Kureiji Ollie Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCjLEmnpCNeisMxy134KPwWw",
+    "handle": "@KoboKanaeru",
+    "name": "Kobo Kanaeru Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCTvHWSfBZgtxE4sILOaurIQ",
+    "handle": "@VestiaZeta",
+    "name": "Vestia Zeta Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UCZLZ8Jjx_RN2CXloOmgTHVg",
+    "handle": "@KaelaKovalskia",
+    "name": "Kaela Kovalskia Ch. hololive-ID",
+    "branch": "Hololive"
+  },
+  {
+    "id": "UC6t3-_N8A6ME1JShZHHqOMw",
+    "handle": "@HanasakiMiyabi",
+    "name": "Miyabi Ch. 花咲みやび",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UC9mf_ZVpouoILRY9NUIaK-w",
+    "handle": "@rikka",
+    "name": "Rikka ch.律可",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCKeAhJvy8zgXWbh9duVjIaQ",
+    "handle": "@Arurandeisu",
+    "name": "Aruran Ch. アルランディス",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCZgOv3YDEs-ZnZWDYVwJdmA",
+    "handle": "@KanadeIzuru",
+    "name": "Izuru Ch. 奏手イヅル",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCEzsociuFqVwgZuMaZqaCsg",
+    "handle": "@KagamiKira",
+    "name": "Kira Ch. 鏡見キラ",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCGKgJ4MtJ1coi6tWJUfnsQA",
+    "handle": "@YakushijiSuzaku",
+    "name": "Suzaku Ch. 薬師寺朱雀",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCANDOlYTJT7N5jlRC3zfzVA",
+    "handle": "@YukokuRoberu",
+    "name": "Roberu Ch. 夕刻ロベル",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCGNI4MENvnsymYjKiZwv9eg",
+    "handle": "@KishidoTemma",
+    "name": "Temma Ch. 岸堂天真",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCNVEsYbiZjH5QLmGeSgTSzg",
+    "handle": "@AstelLeda",
+    "name": "astel ch.アステル",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UChSvpZYRPh0FvG4SJGSga3g",
+    "handle": "@KageyamaShien",
+    "name": "Shien Ch.影山シエン",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCwL7dgTxKo8Y4RFIKWaf8gA",
+    "handle": "@AragamiOga",
+    "name": "Oga Ch.荒咬オウガ",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCsehvfwaWF6nWuFnXI0AqZQ",
+    "handle": "@TsukishitaKaoru",
+    "name": "Kaoru Ch.月下カオル",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCc88OV45ICgHbn3ZqLLb52w",
+    "handle": "@YatogamiFuma",
+    "name": "Fuma Ch. 夜十神封魔 - UPROAR!! -",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCdfMHxjcCc2HSd9qFvfJgjg",
+    "handle": "@MinaseRio",
+    "name": "Rio Ch. 水無世燐央 - UPROAR!! -",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCgRqGV1gBf2Esxh0Tz1vxzw",
+    "handle": "@UtsugiUyu",
+    "name": "Uyu Ch. 羽継烏有 - UPROAR!! -",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCkT1u65YS49ca_LsFwcTakw",
+    "handle": "@HizakiGamma",
+    "name": "Gamma Ch. 緋崎ガンマ - UPROAR!! -",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UC2hx0xVkMoHGWijwr_lA01w",
+    "handle": "@AxelSyrios",
+    "name": "Axel Syrios Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UC7MMNHR-kf9EN1rXiesMTMw",
+    "handle": "@MagniDezmond",
+    "name": "Magni Dezmond Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCDRWSO281bIHYVi-OV3iFYA",
+    "handle": "@NoirVesper",
+    "name": "Noir Vesper Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCyxtGMdWlURZ30WSnEjDOQw",
+    "handle": "@RegisAltare",
+    "name": "Regis Altare Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UC060r4zABV18vcahAWR1n7w",
+    "handle": "@MachinaXFlayon",
+    "name": "Machina X Flayon Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UC7gxU6NXjKF1LrgOddPzgTw",
+    "handle": "@BanzoinHakka",
+    "name": "Banzoin Hakka Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCHP4f7G2dWD4qib7BMatGAw",
+    "handle": "@GavisBettel",
+    "name": "Gavis Bettel Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  },
+  {
+    "id": "UCMqGG8BRAiI1lJfKOpETM_w",
+    "handle": "@JosuijiShinri",
+    "name": "Josuiji Shinri Ch. HOLOSTARS-EN",
+    "branch": "Holostars"
+  }
+]

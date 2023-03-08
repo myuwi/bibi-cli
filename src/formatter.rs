@@ -5,7 +5,7 @@ use chrono::{DateTime, Local};
 use regex::{Captures, Regex};
 use unicode_width::UnicodeWidthStr;
 
-use crate::schedule_parser::{LiveStream, LiveStreamStatus};
+use bibi_types::{LiveStream, LiveStreamStatus};
 
 pub struct Formatter {
     format: String,

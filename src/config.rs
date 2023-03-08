@@ -3,7 +3,6 @@ use serde::Deserialize;
 use std::fs;
 use std::io::ErrorKind::NotFound;
 use std::path::PathBuf;
-
 use thiserror::Error;
 
 const fn default_true() -> bool {

@@ -56,6 +56,7 @@ dependencies = [
  "ansi_term",
  "anyhow",
  "atty",
+ "bibi_types",
  "chrono",
  "chrono-tz",
  "clap",
@@ -70,6 +71,14 @@ dependencies = [
  "tokio",
  "toml",
  "unicode-width",
+]
+
+[[package]]
+name = "bibi_types"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
 ]
 
 [[package]]
