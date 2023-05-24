@@ -7,26 +7,35 @@ use unicode_width::UnicodeWidthStr;
 
 use bibi_types::{LiveStream, LiveStreamStatus};
 
+fn pad_string_right(string: &str, max_width: &usize) -> String {
+    string.to_owned() + &" ".repeat(max_width - string.width())
+}
+
 pub struct Formatter {
     format: String,
     regex: Regex,
 }
 
 impl Formatter {
-    pub fn new(template: &str) -> Self {
+    pub fn new(template: impl Into<String>) -> Self {
         let regex = Regex::new(r"\{([^{}]*)\}").unwrap();
 
         Formatter {
-            format: template.to_owned(),
+            format: template.into(),
             regex,
         }
     }
 
     pub fn print(self, lives: &[LiveStream]) {
+        // TODO: Make these width variables more dynamic?
         // Get the width of the widest channel name
         let max_name_width = lives
             .iter()
             .fold(0, |acc, live| std::cmp::max(live.author_name.width(), acc));
+
+        let max_handle_width = lives.iter().fold(0, |acc, live| {
+            std::cmp::max(live.author_handle.width(), acc)
+        });
 
         let max_title_width = lives
             .iter()
@@ -48,14 +57,17 @@ impl Formatter {
                     let is_last_field = field_count <= current_field_num;
 
                     match captured {
+                        "author_handle" => {
+                            if is_last_field {
+                                return live.author_handle.to_owned();
+                            }
+                            pad_string_right(&live.author_handle, &max_handle_width)
+                        }
                         "author_name" => {
                             if is_last_field {
                                 return live.author_name.to_owned();
                             }
-
-                            let name_width = live.author_name.width();
-                            let padding = " ".repeat(max_name_width - name_width);
-                            live.author_name.to_owned() + &padding
+                            pad_string_right(&live.author_name, &max_name_width)
                         }
                         "stream_time" => {
                             let local_time: DateTime<Local> = DateTime::from(live.time);
@@ -67,10 +79,7 @@ impl Formatter {
                             if is_last_field {
                                 return live.title.to_owned();
                             }
-
-                            let title_width = live.title.width();
-                            let padding = " ".repeat(max_title_width - title_width);
-                            live.title.to_owned() + &padding
+                            pad_string_right(&live.title, &max_title_width)
                         }
                         _ => cap.get(0).unwrap().as_str().to_owned(),
                     }

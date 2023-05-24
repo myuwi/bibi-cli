@@ -9,7 +9,7 @@ use formatter::Formatter;
 
 mod schedule_parser;
 
-use ansi_term::Color::*;
+use ansi_term::Color::{Purple, Yellow};
 use anyhow::Result;
 
 const BIBI_ASCII: &str = "

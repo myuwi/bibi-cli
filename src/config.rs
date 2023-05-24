@@ -5,16 +5,16 @@ use std::io::ErrorKind::NotFound;
 use std::path::PathBuf;
 use thiserror::Error;
 
-const fn default_true() -> bool {
+const fn bool_true() -> bool {
     true
 }
 
 #[derive(Debug, Deserialize)]
 pub struct ConfigBranches {
-    #[serde(default = "default_true")]
+    #[serde(default = "bool_true")]
     pub hololive: bool,
 
-    #[serde(default = "default_true")]
+    #[serde(default = "bool_true")]
     pub holostars: bool,
 }
 

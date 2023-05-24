@@ -91,7 +91,7 @@ Bibi will look for a config file at following locations: `$XDG_CONFIG_HOME/bibi/
 
 ```toml
 [branches]
-hololive = true # Show Hololive members?
+hololive = true   # Show Hololive members?
 holostars = false # Show Holostars members?
 
 [channels]
@@ -119,4 +119,4 @@ From the [Hololive fan wiki][towa-wiki]: "The hat she ([Tokoyami Towa][towa-yt])
 
 [towa-wiki]: https://hololive.wiki/wiki/Tokoyami_Towa
 [towa-yt]: https://www.youtube.com/channel/UC1uv2Oq6kNxgATlCiez59hw
-[towa-music]: https://youtu.be/F1_OQXNF8b8
+[towa-music]: https://youtu.be/HBmss54l5zc

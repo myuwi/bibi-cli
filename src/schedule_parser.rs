@@ -68,23 +68,30 @@ async fn fetch_oembed_data(
     let streams = holodule_data
         .iter()
         .zip(fetches.iter())
-        .filter_map(|(holodule, oembed)| {
-            if oembed.is_err() {
-                return None;
+        .filter_map(|(holodule, oembed)| match oembed {
+            Ok(oembed) => {
+                let (_, author_handle) = oembed.author_url.rsplit_once('/').unwrap();
+
+                let channel = CHANNELS.iter().find(|&c| author_handle == c.handle);
+
+                if channel.is_none() {
+                    eprintln!(
+                        "[!] Unknown channel: {} ({}). Are you using the latest version?",
+                        oembed.author_name, author_handle
+                    );
+                }
+
+                Some(LiveStream {
+                    channel,
+                    author_name: oembed.author_name.to_owned(),
+                    author_handle: author_handle.to_owned(),
+                    id: holodule.id.to_owned(),
+                    title: oembed.title.to_owned(),
+                    status: holodule.status.to_owned(),
+                    time: holodule.time.to_owned(),
+                })
             }
-
-            let oembed = oembed.as_ref().unwrap();
-
-            let (_, author_id) = oembed.author_url.rsplit_once('/').unwrap();
-
-            Some(LiveStream {
-                id: holodule.id.to_owned(),
-                title: oembed.title.to_owned(),
-                author_name: oembed.author_name.to_owned(),
-                author_id: author_id.to_owned(),
-                status: holodule.status.to_owned(),
-                time: holodule.time.to_owned(),
-            })
+            _ => None,
         })
         .collect::<Vec<LiveStream>>();
 
@@ -94,7 +101,7 @@ async fn fetch_oembed_data(
 fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
     let document = Html::parse_document(html);
 
-    let first_date: Vec<u32> = document
+    let first_date = document
         .select(&Selector::parse(".holodule.navbar-text").unwrap())
         .next()
         .unwrap()
@@ -108,7 +115,7 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
         .collect::<String>()
         .split('/')
         .map(|element| element.parse::<u32>().unwrap())
-        .collect();
+        .collect::<Vec<u32>>();
 
     let jst_now: DateTime<Tz> = Utc::now().with_timezone(&Tokyo);
     let mut naive_date = NaiveDate::from_ymd(jst_now.year(), jst_now.month(), jst_now.day());
@@ -188,22 +195,6 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
     Ok(live_streams)
 }
 
-fn vector_contains_channel(channel_list: &[String], author: &Channel) -> bool {
-    channel_list.iter().any(|s| {
-        if s == author.id {
-            return true;
-        }
-
-        if let Some(handle) = author.handle {
-            if s.to_lowercase() == handle.to_lowercase() {
-                return true;
-            }
-        }
-
-        false
-    })
-}
-
 pub async fn get_schedule(
     args: &Args,
     cfg: &Config,
@@ -229,25 +220,31 @@ pub async fn get_schedule(
 
     if !cfg.branches.hololive || !cfg.branches.holostars || !cfg.channels.exclude.is_empty() {
         live_streams.retain(|stream| {
-            match CHANNELS
+            if cfg
+                .channels
+                .include
                 .iter()
-                .find(|&c| c.handle.as_ref().unwrap_or(&c.id) == &stream.author_id)
+                .any(|s| stream.is_from_author(s))
             {
-                Some(author) => {
-                    if vector_contains_channel(&cfg.channels.include, author) {
-                        return true;
-                    }
+                return true;
+            }
 
-                    if vector_contains_channel(&cfg.channels.exclude, author) {
-                        return false;
-                    }
+            if cfg
+                .channels
+                .exclude
+                .iter()
+                .any(|s| stream.is_from_author(s))
+            {
+                return false;
+            }
 
-                    match author.branch {
-                        Branch::Hololive => cfg.branches.hololive,
-                        Branch::Holostars => cfg.branches.holostars,
-                    }
+            if let Some(channel) = stream.channel {
+                match channel.branch {
+                    Branch::Hololive => cfg.branches.hololive,
+                    Branch::Holostars => cfg.branches.holostars,
                 }
-                None => true,
+            } else {
+                true
             }
         });
     }
