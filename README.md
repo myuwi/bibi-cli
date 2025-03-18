@@ -97,7 +97,7 @@ holostars = false # Show Holostars members?
 [channels]
 # Specific channels to exclude (overrides branch options)
 # Channel ids are case sensitive, handles are not
-exclude = ["@hololive", "UCJFZiqLMntJufDCHc6bQixg"]
+exclude = ["@hololive"]
 include = ["@astelleda"]
 ```
 

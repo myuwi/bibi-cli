@@ -6,21 +6,11 @@ authors = ["Miika Kurvinen <myuwi@proton.me>"]
 license = "MIT"
 edition = "2021"
 
-[workspace]
-members = ["types"]
-
-[workspace.dependencies]
-bibi_types = { path = "types" }
-chrono = "0.4.19"
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-
 [dependencies]
 ansi_term = "0.12.1"
 anyhow = "1.0"
 atty = "0.2.14"
-bibi_types.workspace = true
-chrono.workspace = true
+chrono = "0.4.19"
 chrono-tz = "0.6.1"
 clap = { version = "4.0.9", features = ["derive"] }
 directories = "4.0.1"
@@ -28,14 +18,9 @@ futures = "0.3"
 regex = "1"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 scraper = "0.13.0"
-serde.workspace = true
-serde_json.workspace = true
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
 thiserror = "1.0"
 tokio = { version = "1", features = ["full"] }
 toml = "0.5.9"
 unicode-width = "0.1.7"
-
-[build-dependencies]
-bibi_types.workspace = true
-serde.workspace = true
-serde_json.workspace = true

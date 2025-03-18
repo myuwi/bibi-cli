@@ -5,7 +5,7 @@ use chrono::{DateTime, Local};
 use regex::{Captures, Regex};
 use unicode_width::UnicodeWidthStr;
 
-use bibi_types::{LiveStream, LiveStreamStatus};
+use crate::types::{LiveStream, LiveStreamStatus};
 
 fn pad_string_right(string: &str, max_width: &usize) -> String {
     string.to_owned() + &" ".repeat(max_width - string.width())

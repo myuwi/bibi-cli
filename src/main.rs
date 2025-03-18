@@ -1,16 +1,15 @@
-mod cli;
-use cli::Args;
-
-mod config;
-use config::Config;
-
-mod formatter;
-use formatter::Formatter;
-
-mod schedule_parser;
-
 use ansi_term::Color::{Purple, Yellow};
 use anyhow::Result;
+
+mod cli;
+mod config;
+mod formatter;
+mod schedule_parser;
+mod types;
+
+use cli::Args;
+use config::Config;
+use formatter::Formatter;
 
 const BIBI_ASCII: &str = "
   d8b, |        |        | ,d8b

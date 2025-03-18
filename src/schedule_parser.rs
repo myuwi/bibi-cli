@@ -6,8 +6,7 @@ use thiserror::Error;
 
 use crate::cli::Args;
 use crate::config::Config;
-use bibi_types::Branch::{self, Hololive, Holostars};
-use bibi_types::{Channel, HoloduleData, LiveStream, LiveStreamStatus, OEmbedData};
+use crate::types::{HoloduleData, LiveStream, LiveStreamStatus, OEmbedData};
 
 #[derive(Error, Debug)]
 pub enum ScheduleParserError {
@@ -18,8 +17,6 @@ pub enum ScheduleParserError {
     #[error("Unable to parse response text")]
     ParseError,
 }
-
-const CHANNELS: &[Channel] = &include!(concat!(env!("OUT_DIR"), "/channels.rs"));
 
 const SCHEDULE_URL: &str = "https://schedule.hololive.tv/";
 
@@ -72,17 +69,7 @@ async fn fetch_oembed_data(
             Ok(oembed) => {
                 let (_, author_handle) = oembed.author_url.rsplit_once('/').unwrap();
 
-                let channel = CHANNELS.iter().find(|&c| author_handle == c.handle);
-
-                if channel.is_none() {
-                    eprintln!(
-                        "[!] Unknown channel: {} ({}). Are you using the latest version?",
-                        oembed.author_name, author_handle
-                    );
-                }
-
                 Some(LiveStream {
-                    channel,
                     author_name: oembed.author_name.to_owned(),
                     author_handle: author_handle.to_owned(),
                     id: holodule.id.to_owned(),
@@ -220,32 +207,15 @@ pub async fn get_schedule(
 
     if !cfg.branches.hololive || !cfg.branches.holostars || !cfg.channels.exclude.is_empty() {
         live_streams.retain(|stream| {
-            if cfg
-                .channels
-                .include
-                .iter()
-                .any(|s| stream.is_from_author(s))
-            {
+            if cfg.channels.include.contains(&stream.author_handle) {
                 return true;
             }
 
-            if cfg
-                .channels
-                .exclude
-                .iter()
-                .any(|s| stream.is_from_author(s))
-            {
+            if cfg.channels.exclude.contains(&stream.author_handle) {
                 return false;
             }
 
-            if let Some(channel) = stream.channel {
-                match channel.branch {
-                    Branch::Hololive => cfg.branches.hololive,
-                    Branch::Holostars => cfg.branches.holostars,
-                }
-            } else {
-                true
-            }
+            true
         });
     }
 
