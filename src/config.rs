@@ -1,8 +1,7 @@
+use std::{fs, io::ErrorKind::NotFound, path::PathBuf};
+
 use directories::ProjectDirs;
 use serde::Deserialize;
-use std::fs;
-use std::io::ErrorKind::NotFound;
-use std::path::PathBuf;
 use thiserror::Error;
 
 const fn bool_true() -> bool {

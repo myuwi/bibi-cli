@@ -4,9 +4,11 @@ use futures::stream::*;
 use scraper::{Html, Selector};
 use thiserror::Error;
 
-use crate::cli::Args;
-use crate::config::Config;
-use crate::types::{HoloduleData, LiveStream, LiveStreamStatus, OEmbedData};
+use crate::{
+    cli::Args,
+    config::Config,
+    types::{HoloduleData, LiveStream, LiveStreamStatus, OEmbedData},
+};
 
 #[derive(Error, Debug)]
 pub enum ScheduleParserError {

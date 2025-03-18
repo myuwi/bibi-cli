@@ -1,5 +1,4 @@
-use ansi_term::Color::*;
-use ansi_term::Style;
+use ansi_term::{Color::*, Style};
 use atty::Stream;
 use chrono::{DateTime, Local};
 use regex::{Captures, Regex};

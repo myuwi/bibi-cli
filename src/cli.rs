@@ -1,5 +1,6 @@
-use clap::Parser;
 use std::path::PathBuf;
+
+use clap::Parser;
 
 const ABOUT: &str = "A simple Hololive Schedule CLI tool.
 Shows current and upcoming streams if no flags are provided.";
