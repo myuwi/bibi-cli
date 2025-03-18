@@ -27,10 +27,14 @@ impl Formatter {
 
     pub fn print(self, lives: &[LiveStream]) {
         // TODO: Make these width variables more dynamic?
-        // Get the width of the widest channel name
-        let max_name_width = lives
+
+        let max_channel_name_width = lives
             .iter()
             .fold(0, |acc, live| std::cmp::max(live.author_name.width(), acc));
+
+        let max_name_width = lives
+            .iter()
+            .fold(0, |acc, live| std::cmp::max(live.get_name().width(), acc));
 
         let max_handle_width = lives.iter().fold(0, |acc, live| {
             std::cmp::max(live.author_handle.width(), acc)
@@ -62,11 +66,18 @@ impl Formatter {
                             }
                             pad_string_right(&live.author_handle, &max_handle_width)
                         }
-                        "author_name" => {
+                        "channel_name" => {
                             if is_last_field {
                                 return live.author_name.to_owned();
                             }
-                            pad_string_right(&live.author_name, &max_name_width)
+                            pad_string_right(&live.author_name, &max_channel_name_width)
+                        }
+                        "author_name" => {
+                            let name = live.get_name();
+                            if is_last_field {
+                                return name;
+                            }
+                            pad_string_right(&name, &max_name_width)
                         }
                         "stream_time" => {
                             let local_time: DateTime<Local> = DateTime::from(live.time);
