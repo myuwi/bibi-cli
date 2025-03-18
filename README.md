@@ -74,14 +74,15 @@ Options:
    sudo install -Dsm755 target/release/bibi -t /usr/local/bin
    ```
 
-### Using Makefile
+### Using the Justfile
 
-| make      |                                                              |
-| --------- | ------------------------------------------------------------ |
-| build     | build binary in release mode                                 |
-| clean     | clean build files                                            |
-| install   | build binary in release mode and install to `/usr/local/bin` |
-| uninstall | uninstall bibi binary                                        |
+| Recipe    | Description                |
+| --------- | ---------------------------|
+| list      | List available commands    |
+| build     | Build Bibi in release mode |
+| clean     | Clean build artifacts      |
+| install   | Build and Install Bibi     |
+| uninstall | Uninstall Bibi             |
 
 ## Configuration
 
