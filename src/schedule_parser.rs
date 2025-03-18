@@ -7,7 +7,7 @@ use thiserror::Error;
 use crate::{
     cli::Args,
     config::Config,
-    types::{HoloduleData, LiveStream, LiveStreamStatus, OEmbedData},
+    types::{Branch, HoloduleData, LiveStream, LiveStreamStatus, OEmbedData},
 };
 
 #[derive(Error, Debug)]
@@ -217,7 +217,10 @@ pub async fn get_schedule(
                 return false;
             }
 
-            true
+            match stream.get_branch() {
+                Branch::Hololive => cfg.branches.hololive,
+                Branch::Holostars => cfg.branches.holostars,
+            }
         });
     }
 
