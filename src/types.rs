@@ -1,4 +1,5 @@
 use chrono::{offset::FixedOffset, DateTime};
+use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Deserialize;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
@@ -38,6 +39,10 @@ pub struct LiveStream {
     pub time: DateTime<FixedOffset>,
 }
 
+lazy_static! {
+    static ref CHANNEL_REGEX: Regex = Regex::new(r"\s*(C|(\sc))h(annel|\.|。|\s)\s*").unwrap();
+}
+
 impl LiveStream {
     // Probably not 100% accurate, but works relatively well for now
     pub fn get_branch(&self) -> Branch {
@@ -55,9 +60,7 @@ impl LiveStream {
     }
 
     pub fn get_name(&self) -> String {
-        let re = Regex::new(r"\s*(C|(\sc))h(annel|\.|。|\s)\s*").unwrap();
-
-        let parts: Vec<&str> = re.split(&self.author_name).collect();
+        let parts: Vec<&str> = CHANNEL_REGEX.split(&self.author_name).collect();
 
         let name = match parts.as_slice() {
             [name, ""] => name.to_string(),

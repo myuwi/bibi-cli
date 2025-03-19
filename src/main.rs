@@ -3,13 +3,12 @@ use anyhow::Result;
 
 mod cli;
 mod config;
-mod formatter;
+mod format;
 mod schedule_parser;
 mod types;
 
 use cli::Args;
 use config::Config;
-use formatter::Formatter;
 
 const BIBI_ASCII: &str = "
   d8b, |        |        | ,d8b
@@ -40,14 +39,13 @@ async fn main() -> Result<()> {
     if args.ascii {
         print_bibi();
     } else {
-        let default_template =
-            "{stream_time}  {author_name}  {stream_url}  {stream_title}".to_owned();
-
-        let template = args.format.to_owned().unwrap_or(default_template);
-        let formatter = Formatter::new(&template);
-
         let lives = schedule_parser::get_schedule(&args, &cfg).await?;
-        formatter.print(&lives);
+
+        let default_template =
+            "{stream_time}  {author_name}  {stream_url}  {stream_title}".to_string();
+        let format = args.format.unwrap_or(default_template);
+
+        format::print(&format, &lives);
     }
 
     Ok(())
