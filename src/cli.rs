@@ -6,7 +6,7 @@ const ABOUT: &str = "A simple Hololive Schedule CLI tool.
 Shows current and upcoming streams if no flags are provided.";
 
 #[derive(Debug, Parser)]
-#[command(about = ABOUT, version )]
+#[command(about = ABOUT, version)]
 pub struct Args {
     #[arg(short, long, help = "Show all streams")]
     pub all: bool,
@@ -43,10 +43,4 @@ pub struct Args {
         conflicts_with = "all"
     )]
     pub upcoming: bool,
-}
-
-impl Args {
-    pub fn new() -> Self {
-        Self::parse()
-    }
 }

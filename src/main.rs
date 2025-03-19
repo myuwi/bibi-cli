@@ -1,5 +1,6 @@
 use ansi_term::Color::{Purple, Yellow};
 use anyhow::Result;
+use clap::Parser;
 
 mod cli;
 mod config;
@@ -33,8 +34,8 @@ fn print_bibi() {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let args = Args::new();
-    let cfg = Config::new(&args.config)?;
+    let args = Args::parse();
+    let cfg = Config::load(&args.config)?;
 
     if args.ascii {
         print_bibi();

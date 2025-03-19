@@ -51,7 +51,7 @@ pub enum ConfigError {
 }
 
 impl Config {
-    pub fn new(path: &Option<PathBuf>) -> Result<Self, ConfigError> {
+    pub fn load(path: &Option<PathBuf>) -> Result<Self, ConfigError> {
         let config_path = match path {
             Some(p) => {
                 if !p.exists() {
