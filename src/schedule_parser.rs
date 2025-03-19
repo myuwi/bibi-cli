@@ -164,7 +164,9 @@ pub async fn get_schedule(
     let html = fetch_html().await?;
     let mut holodule_data = parse_html(&html)?;
 
-    if !args.all {
+    let show_all = args.all || args.live && args.ended && args.upcoming;
+
+    if !show_all {
         if !args.live && !args.ended && !args.upcoming {
             // If no args are selected, don't show "Ended"
             holodule_data.retain(|live| !matches!(live.status, LiveStreamStatus::Ended));

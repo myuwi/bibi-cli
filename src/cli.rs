@@ -8,9 +8,6 @@ Shows current and upcoming streams if no flags are provided.";
 #[derive(Debug, Parser)]
 #[command(about = ABOUT, version)]
 pub struct Args {
-    #[arg(short, long, help = "Show all streams")]
-    pub all: bool,
-
     #[arg(long, help = "Print a cute Bibi ascii art")]
     pub ascii: bool,
 
@@ -19,6 +16,9 @@ pub struct Args {
 
     #[arg(short, long, help = "Output format", value_name = "FORMAT")]
     pub format: Option<String>,
+
+    #[arg(short, long, help = "Show all streams")]
+    pub all: bool,
 
     #[arg(
         short,
