@@ -1,4 +1,5 @@
-use chrono::{offset::FixedOffset, DateTime};
+use chrono::DateTime;
+use chrono_tz::Tz;
 use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Deserialize;
@@ -14,7 +15,7 @@ pub enum LiveStreamStatus {
 #[derive(Debug)]
 pub struct HoloduleData {
     pub id: String,
-    pub time: DateTime<FixedOffset>,
+    pub time: DateTime<Tz>,
     pub status: LiveStreamStatus,
 }
 
@@ -36,7 +37,7 @@ pub struct LiveStream {
     pub id: String,
     pub title: String,
     pub status: LiveStreamStatus,
-    pub time: DateTime<FixedOffset>,
+    pub time: DateTime<Tz>,
 }
 
 lazy_static! {

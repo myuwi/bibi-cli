@@ -1,6 +1,6 @@
 use ansi_term::{Color::*, Style};
 use atty::Stream;
-use chrono::{DateTime, Local};
+use chrono::Local;
 use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 use unicode_width::UnicodeWidthStr;
@@ -69,7 +69,7 @@ pub fn print(format: &str, lives: &[LiveStream]) {
                         pad_string_right(&name, &max_name_width)
                     }
                     "stream_time" => {
-                        let local_time: DateTime<Local> = DateTime::from(live.time);
+                        let local_time = live.time.with_timezone(&Local);
                         local_time.format("%H:%M").to_string()
                     }
                     "stream_id" => live.id.to_owned(),

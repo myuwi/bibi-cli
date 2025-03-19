@@ -60,13 +60,13 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
         .collect::<Vec<u32>>();
 
     let jst_now: DateTime<Tz> = Utc::now().with_timezone(&Tokyo);
-    let mut naive_date = NaiveDate::from_ymd(jst_now.year(), jst_now.month(), jst_now.day());
+    let mut naive_date = jst_now.date_naive();
 
     for _ in 0..3 {
         if naive_date.month() == first_date[0] && naive_date.day() == first_date[1] {
             break;
         } else {
-            naive_date = naive_date.pred();
+            naive_date = naive_date.pred_opt().unwrap();
         }
     }
 
@@ -82,8 +82,6 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
             }
 
             let (_, video_id) = url.rsplit_once("?v=")?;
-
-            let live = element.value().attr("style")?.contains("border: 3px red");
 
             // Get stream start time string
             let selector = Selector::parse("div.datetime").unwrap();
@@ -101,27 +99,28 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
 
             // TODO: Make sure there aren't edge cases where this doesn't work
             // If time is less than the last time assume it is the next day so update the date
-            if naive_time_prev.is_some() && naive_time_prev.unwrap() > naive_time {
-                naive_date = naive_date.succ()
+            if naive_time_prev.is_some_and(|naive_time_prev| naive_time_prev > naive_time) {
+                naive_date = naive_date.succ_opt().unwrap()
             }
 
             naive_time_prev = Some(naive_time);
 
             // Create a DateTime for the stream
-            let jst_offset = 9 * 3600;
-            let stream_time = FixedOffset::east_opt(jst_offset)
-                .unwrap()
-                .ymd(naive_date.year(), naive_date.month(), naive_date.day())
-                .and_hms(naive_time.hour(), naive_time.minute(), 0);
+            let naive_datetime = naive_date.and_time(naive_time);
+            let stream_time = Tokyo.from_local_datetime(&naive_datetime).unwrap();
+
+            let live = element.value().attr("style")?.contains("border: 3px red");
+
+            const FIFTEEN_MINUTES: i64 = 15 * 60;
 
             let status = if live {
                 LiveStreamStatus::Live
-            } else if stream_time.timestamp() + 15 * 60 < jst_now.timestamp()
-                || stream_time.minute() % 5 != 0
+            } else if jst_now.timestamp() < stream_time.timestamp() + FIFTEEN_MINUTES
+                && stream_time.minute() % 5 == 0
             {
-                LiveStreamStatus::Ended
-            } else {
                 LiveStreamStatus::Upcoming
+            } else {
+                LiveStreamStatus::Ended
             };
 
             let live_stream = HoloduleData {
