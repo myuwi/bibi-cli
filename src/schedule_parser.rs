@@ -1,6 +1,7 @@
 use chrono::prelude::*;
 use chrono_tz::{Asia::Tokyo, Tz};
 use futures::stream::*;
+use reqwest::StatusCode;
 use scraper::{Html, Selector};
 use thiserror::Error;
 
@@ -23,68 +24,20 @@ pub enum ScheduleParserError {
 const SCHEDULE_URL: &str = "https://schedule.hololive.tv/";
 
 async fn fetch_html() -> Result<String, ScheduleParserError> {
-    let resp = match reqwest::get(SCHEDULE_URL).await {
-        Ok(resp) => resp,
-        Err(_) => {
-            return Err(ScheduleParserError::ConnectionError(
-                SCHEDULE_URL.to_owned(),
-            ))
-        }
-    };
+    let resp = reqwest::get(SCHEDULE_URL)
+        .await
+        .map_err(|_| ScheduleParserError::ConnectionError(SCHEDULE_URL.to_owned()))?;
 
-    match resp.status() {
-        reqwest::StatusCode::OK => (),
-        _ => return Err(ScheduleParserError::InvalidRespose(resp.status().as_u16())),
-    };
+    if resp.status() != StatusCode::OK {
+        return Err(ScheduleParserError::InvalidRespose(resp.status().as_u16()));
+    }
 
-    let body = match resp.text().await {
-        Ok(resp) => resp,
-        Err(_) => return Err(ScheduleParserError::ParseError),
-    };
+    let body = resp
+        .text()
+        .await
+        .map_err(|_| ScheduleParserError::ParseError)?;
 
     Ok(body)
-}
-
-async fn fetch_oembed_data(
-    holodule_data: Vec<HoloduleData>,
-) -> Result<Vec<LiveStream>, ScheduleParserError> {
-    let fetches = futures::stream::iter(&holodule_data)
-        .map(|live_stream| async {
-            let data = reqwest::get(format!(
-                "https://www.youtube.com/oembed?url=https://youtu.be/{}&format=json",
-                live_stream.id
-            ))
-            .await?
-            .json::<OEmbedData>()
-            .await?;
-
-            Ok(data)
-        })
-        .buffered(16)
-        .collect::<Vec<Result<OEmbedData, Box<dyn std::error::Error>>>>()
-        .await;
-
-    let streams = holodule_data
-        .iter()
-        .zip(fetches.iter())
-        .filter_map(|(holodule, oembed)| match oembed {
-            Ok(oembed) => {
-                let (_, author_handle) = oembed.author_url.rsplit_once('/').unwrap();
-
-                Some(LiveStream {
-                    author_name: oembed.author_name.to_owned(),
-                    author_handle: author_handle.to_owned(),
-                    id: holodule.id.to_owned(),
-                    title: oembed.title.to_owned(),
-                    status: holodule.status.to_owned(),
-                    time: holodule.time.to_owned(),
-                })
-            }
-            _ => None,
-        })
-        .collect::<Vec<LiveStream>>();
-
-    Ok(streams)
 }
 
 fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
@@ -184,20 +137,39 @@ fn parse_html(html: &str) -> Result<Vec<HoloduleData>, ScheduleParserError> {
     Ok(live_streams)
 }
 
+async fn fetch_oembed_data(
+    holodule_data: &Vec<HoloduleData>,
+) -> Vec<Result<OEmbedData, Box<dyn std::error::Error>>> {
+    futures::stream::iter(holodule_data)
+        .map(|live_stream| async {
+            let data = reqwest::get(format!(
+                "https://www.youtube.com/oembed?url=https://youtu.be/{}&format=json",
+                live_stream.id
+            ))
+            .await?
+            .json::<OEmbedData>()
+            .await?;
+
+            Ok(data)
+        })
+        .buffered(16)
+        .collect::<Vec<Result<OEmbedData, Box<dyn std::error::Error>>>>()
+        .await
+}
+
 pub async fn get_schedule(
     args: &Args,
     cfg: &Config,
 ) -> Result<Vec<LiveStream>, ScheduleParserError> {
-    let body = fetch_html().await?;
-
-    let mut lives = parse_html(&body)?;
+    let html = fetch_html().await?;
+    let mut holodule_data = parse_html(&html)?;
 
     if !args.all {
         if !args.live && !args.ended && !args.upcoming {
             // If no args are selected, don't show "Ended"
-            lives.retain(|live| !matches!(live.status, LiveStreamStatus::Ended));
+            holodule_data.retain(|live| !matches!(live.status, LiveStreamStatus::Ended));
         } else {
-            lives.retain(|stream| match stream.status {
+            holodule_data.retain(|stream| match stream.status {
                 LiveStreamStatus::Live => args.live,
                 LiveStreamStatus::Ended => args.ended,
                 LiveStreamStatus::Upcoming => args.upcoming,
@@ -205,7 +177,27 @@ pub async fn get_schedule(
         }
     }
 
-    let mut live_streams = fetch_oembed_data(lives).await?;
+    let oembed_data = fetch_oembed_data(&holodule_data).await;
+
+    let mut live_streams = holodule_data
+        .iter()
+        .zip(oembed_data.iter())
+        .filter_map(|(holodule, oembed)| match oembed {
+            Ok(oembed) => {
+                let (_, author_handle) = oembed.author_url.rsplit_once('/').unwrap();
+
+                Some(LiveStream {
+                    author_name: oembed.author_name.to_owned(),
+                    author_handle: author_handle.to_owned(),
+                    id: holodule.id.to_owned(),
+                    title: oembed.title.to_owned(),
+                    status: holodule.status.to_owned(),
+                    time: holodule.time.to_owned(),
+                })
+            }
+            _ => None,
+        })
+        .collect::<Vec<LiveStream>>();
 
     if !cfg.branches.hololive || !cfg.branches.holostars || !cfg.channels.exclude.is_empty() {
         live_streams.retain(|stream| {

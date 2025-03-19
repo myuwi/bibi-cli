@@ -1,4 +1,4 @@
-use std::{fs, io::ErrorKind::NotFound, path::PathBuf};
+use std::{fs, io::ErrorKind, path::PathBuf};
 
 use directories::ProjectDirs;
 use serde::Deserialize;
@@ -69,7 +69,7 @@ impl Config {
         let config = match fs::read_to_string(config_path) {
             // TODO: Handle invalid file error
             Ok(cfg) => toml::from_str(&cfg).unwrap(),
-            Err(e) if e.kind() == NotFound && path.is_none() => Config::default(),
+            Err(e) if e.kind() == ErrorKind::NotFound && path.is_none() => Config::default(),
             Err(e) => panic!("{}", e),
         };
 
