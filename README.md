@@ -83,6 +83,14 @@ Options:
 | install   | Build and Install Bibi     |
 | uninstall | Uninstall Bibi             |
 
+### Using Docker
+
+Bibi is also available through Docker.
+
+```sh
+docker run -t myuwi/bibi-cli --help
+```
+
 ## Configuration
 
 Bibi will look for a config file at following locations: `$XDG_CONFIG_HOME/bibi/bibi.toml` or `$HOME/.config/bibi/bibi.toml`
